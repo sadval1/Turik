@@ -70,6 +70,12 @@
   this.reset();
 });
 
+matchesRef.orderBy("created").onSnapshot(snapshot => {
+  const matches = [];
+  snapshot.forEach(doc => matches.push(doc.data()));
+  updateTable(matches);
+});
+
     function updateTable() {
       const table = {};
       matches.forEach(({ player1, player2, score1, score2 }) => {
