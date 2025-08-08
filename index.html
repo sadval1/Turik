@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js"></script>
   <meta charset="UTF-8" />
   <title>Турнирная таблица</title>
   <style>
@@ -40,41 +37,23 @@
   </table>
 
   <script>
-    const firebaseConfig = {
-  apiKey: "AIzaSyCa2OWaVnrVFQe03XU3nRZgBLkit-FvM-c",
-  authDomain: "turik-d9084.firebaseapp.com",
-  projectId: "turik-d9084",
-  storageBucket: "turik-d9084.firebasestorage.app",
-  messagingSenderId: "1020306274946",
-  appId: "1:1020306274946:web:95881b5be7b2eafcd6529b"
-};
     let matches = JSON.parse(localStorage.getItem("matches")) || [];
 
-    document.getElementById("matchForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-  const player1 = document.getElementById("player1").value.trim();
-  const player2 = document.getElementById("player2").value.trim();
-  const score1 = parseInt(document.getElementById("score1").value);
-  const score2 = parseInt(document.getElementById("score2").value);
+    document.getElementById("matchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const player1 = document.getElementById("player1").value.trim();
+      const player2 = document.getElementById("player2").value.trim();
+      const score1 = parseInt(document.getElementById("score1").value);
+      const score2 = parseInt(document.getElementById("score2").value);
 
-  if (!player1 || !player2 || isNaN(score1) || isNaN(score2)) return;
+      if (!player1 || !player2 || isNaN(score1) || isNaN(score2)) return;
 
-  await matchesRef.add({
-    player1,
-    player2,
-    score1,
-    score2,
-    created: Date.now()
-  });
+      matches.push({ player1, player2, score1, score2 });
+      localStorage.setItem("matches", JSON.stringify(matches));
 
-  this.reset();
-});
-
-matchesRef.orderBy("created").onSnapshot(snapshot => {
-  const matches = [];
-  snapshot.forEach(doc => matches.push(doc.data()));
-  updateTable(matches);
-});
+      this.reset();
+      updateTable();
+    });
 
     function updateTable() {
       const table = {};
