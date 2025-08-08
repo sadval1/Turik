@@ -50,21 +50,25 @@
 };
     let matches = JSON.parse(localStorage.getItem("matches")) || [];
 
-    document.getElementById("matchForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const player1 = document.getElementById("player1").value.trim();
-      const player2 = document.getElementById("player2").value.trim();
-      const score1 = parseInt(document.getElementById("score1").value);
-      const score2 = parseInt(document.getElementById("score2").value);
+    document.getElementById("matchForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const player1 = document.getElementById("player1").value.trim();
+  const player2 = document.getElementById("player2").value.trim();
+  const score1 = parseInt(document.getElementById("score1").value);
+  const score2 = parseInt(document.getElementById("score2").value);
 
-      if (!player1 || !player2 || isNaN(score1) || isNaN(score2)) return;
+  if (!player1 || !player2 || isNaN(score1) || isNaN(score2)) return;
 
-      matches.push({ player1, player2, score1, score2 });
-      localStorage.setItem("matches", JSON.stringify(matches));
+  await matchesRef.add({
+    player1,
+    player2,
+    score1,
+    score2,
+    created: Date.now()
+  });
 
-      this.reset();
-      updateTable();
-    });
+  this.reset();
+});
 
     function updateTable() {
       const table = {};
